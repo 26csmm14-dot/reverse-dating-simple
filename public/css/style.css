@@ -4,12 +4,12 @@
    ========================================================================== */
 
 :root {
-  /* White & Very Light Baby Pink Palette */
-  --bg-color: #fdf5f7;
-  --bg-gradient: linear-gradient(180deg, #ffffff 0%, #fdf2f5 100%);
+  /* White & Distinct Light Baby Pink Palette */
+  --bg-color: #ffdbe6;
+  --bg-gradient: linear-gradient(180deg, #ffebf2 0%, #ffd6e2 100%);
   --card-bg: #ffffff;
-  --card-hover: #fffdfd;
-  --border-color: #fce1e8;
+  --card-hover: #ffffff;
+  --border-color: #f7cad7;
   --border-focus: #f472b6;
   
   --text-main: #1f2937;
@@ -18,13 +18,13 @@
   
   --accent: #f472b6;
   --accent-hover: #ec4899;
-  --accent-light: #fff0f3;
-  --accent-pill: #fde8ed;
+  --accent-light: #fff0f5;
+  --accent-pill: #ffe4ee;
   --accent-text: #db2777;
-  --accent-glow: rgba(244, 114, 182, 0.22);
+  --accent-glow: rgba(244, 114, 182, 0.25);
   
   --input-bg: #ffffff;
-  --input-border: #ebd3da;
+  --input-border: #f3cbd6;
   
   --success: #059669;
   --danger: #dc2626;
