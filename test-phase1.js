@@ -87,7 +87,7 @@ async function runTests() {
     const testCandidate = {
       name: 'Rhea Sharma',
       contactType: 'instagram',
-      contact: '@rhea_sharma_test',
+      contact: `@rhea_sharma_${Date.now()}`,
       photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
       expectations: 'Looking for thoughtful conversations and good coffee.',
     };
@@ -106,7 +106,7 @@ async function runTests() {
     const resAuthGet = await request('GET', `/api/auth?applicant_id=${createdId}`);
     assert.strictEqual(resAuthGet.statusCode, 200, 'GET /api/auth should return 200 OK');
     assert.strictEqual(resAuthGet.json?.authenticated, true, 'authenticated should be true');
-    assert.strictEqual(resAuthGet.json?.applicant?.contact, '@rhea_sharma_test');
+    assert.strictEqual(resAuthGet.json?.applicant?.contact, testCandidate.contact.toLowerCase());
     assert.strictEqual(resAuthGet.json?.applicant?.status, 'viewing');
     console.log('✓ Test 5: GET /api/auth (Session Verification) passed');
 

@@ -100,10 +100,11 @@ async function runPhase2Tests() {
     console.log('✓ Test 4: CSS baby pink theme & zero purple passed');
 
     // Test 5: Candidate Registration via POST /api/auth
+    const uniqueContact = `@anya_roy_${Date.now()}`;
     const testCandidate = {
       name: 'Anya Roy',
       contactType: 'instagram',
-      contact: '@anya_roy_dating',
+      contact: uniqueContact,
       expectations: 'Looking for someone genuine with shared values.',
     };
     const resAuth = await request('POST', '/api/auth', testCandidate);
