@@ -194,7 +194,7 @@ async function runPhase3Tests() {
 
     const resRejectedPage = await request('GET', '/rejected.html');
     assert.strictEqual(resRejectedPage.statusCode, 200, 'GET /rejected.html should return 200');
-    assert(resRejectedPage.body.includes('Connection Not Found'), 'rejected.html contains playful 404 message');
+    assert(resRejectedPage.body.includes('LOVE') && resRejectedPage.body.includes('NOT FOUND'), 'rejected.html contains playful 404 message');
     console.log('✓ Test 9: accepted.html (confetti & channels) & rejected.html verified');
 
     console.log('\n=============================================');

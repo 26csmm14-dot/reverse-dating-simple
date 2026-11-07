@@ -87,7 +87,7 @@ async function runPhase2Tests() {
 
     const resRejected = await request('GET', '/rejected.html');
     assert.strictEqual(resRejected.statusCode, 200, 'GET /rejected.html should return 200 OK');
-    assert(resRejected.body.includes('Connection Not Found'), 'rejected.html contains playful 404 message');
+    assert(resRejected.body.includes('LOVE') && resRejected.body.includes('NOT FOUND'), 'rejected.html contains playful 404 message');
     console.log('✓ Test 3: Status pages (accepted.html & rejected.html) serving passed');
 
     // Test 4: CSS Theme Verification (baby pink background & white cards, zero purple)
