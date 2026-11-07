@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WANNA DATE U // Pruthviraj</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="badge">Reverse Dating // Pruthviraj</div>
+      <h1>WANNA DATE U</h1>
+      <p>Explore my portfolio, ambitions, and pitch — but first, introduce yourself.</p>
+    </header>
+
+    <!-- Main Onboarding Card -->
+    <main class="card">
+      <!-- Error / Alert Banner -->
+      <div id="alertBanner" class="alert alert-danger"></div>
+
+      <form id="onboardingForm">
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label" for="name">Your Name</label>
+          <input type="text" id="name" name="name" placeholder="What should I call you?" required autocomplete="name">
+        </div>
+
+        <!-- Contact Platform -->
+        <div class="form-group">
+          <label class="form-label" for="contactType">Preferred Contact Platform</label>
+          <select id="contactType" name="contactType">
+            <option value="instagram" selected>Instagram (@username)</option>
+            <option value="telegram">Telegram (@username)</option>
+            <option value="snapchat">Snapchat (username)</option>
+            <option value="whatsapp">WhatsApp (Phone number)</option>
+            <option value="phone">Phone Call / SMS</option>
+            <option value="email">Email Address</option>
+          </select>
+        </div>
+
+        <!-- Contact Handle / Number -->
+        <div class="form-group">
+          <label class="form-label" for="contact">Contact Handle / Number</label>
+          <input type="text" id="contact" name="contact" placeholder="@your_instagram" required>
+          <div class="form-hint" id="contactHint">Where I can reach you if we match.</div>
+        </div>
+
+        <!-- Photo Section -->
+        <div class="form-group">
+          <label class="form-label">A photo of your lovely face?</label>
+          <div class="photo-uploader">
+            <div class="photo-preview" id="photoPreview">
+              <span id="previewPlaceholder">👤</span>
+              <img id="previewImage" src="" alt="Photo Preview" style="display: none;">
+            </div>
+
+            <div class="photo-actions">
+              <!-- File Upload Input (Hidden) -->
+              <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" style="display: none;">
+              <button type="button" class="btn btn-secondary" id="btnUploadFile">Upload Picture</button>
+              <button type="button" class="btn btn-secondary" id="btnToggleUrl">Paste Link</button>
+              <button type="button" class="btn btn-text" id="btnSkipPhoto">Skip</button>
+            </div>
+
+            <!-- Direct URL Input (Toggled) -->
+            <div id="urlInputContainer" style="display: none; margin-top: 15px;">
+              <input type="url" id="photoUrl" placeholder="https://example.com/your-photo.jpg">
+            </div>
+          </div>
+        </div>
+
+        <!-- Match Expectations -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <label class="form-label" for="expectations" style="margin-bottom: 0;">What are you looking for?</label>
+            <button type="button" class="btn btn-text" id="btnSkipExpectations">Skip</button>
+          </div>
+          <textarea id="expectations" name="expectations" placeholder="Share your green flags, vibe preferences, or expectations..."></textarea>
+          <div class="form-hint">Tell me what makes a great connection for you.</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary" id="btnSubmit">
+          Enter Pitch Deck &rarr;
+        </button>
+      </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2026 Pruthviraj &bull; BSc Computer Science &bull; Kristu Jayanti</p>
+    </footer>
+  </div>
+
+  <script src="/js/onboarding.js"></script>
+</body>
+</html>
