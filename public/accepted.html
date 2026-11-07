@@ -136,5 +136,78 @@
       <p>&copy; 2026 Pruthviraj &bull; BSc Computer Science &bull; Kristu Jayanti</p>
     </footer>
   </div>
+
+  <!-- Celebratory Canvas Confetti (Pure Vanilla JS) -->
+  <canvas id="confettiCanvas" style="position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999;"></canvas>
+  <script>
+    (function () {
+      const canvas = document.getElementById('confettiCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const colors = ['#ff7a00', '#f472b6', '#fbbf24', '#ffffff', '#ea580c', '#ec4899'];
+      const particles = [];
+      const particleCount = 85;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: width / 2 + (Math.random() - 0.5) * 200,
+          y: height / 3 + (Math.random() - 0.5) * 100,
+          vx: (Math.random() - 0.5) * 12,
+          vy: Math.random() * -10 - 4,
+          size: Math.random() * 8 + 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rSpeed: (Math.random() - 0.5) * 10,
+          opacity: 1,
+        });
+      }
+
+      let animationFrame;
+      const startTime = Date.now();
+
+      function render() {
+        const elapsed = Date.now() - startTime;
+        ctx.clearRect(0, 0, width, height);
+
+        let active = false;
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.22; // gravity
+          p.rotation += p.rSpeed;
+          if (elapsed > 2000) {
+            p.opacity = Math.max(0, 1 - (elapsed - 2000) / 1500);
+          }
+
+          if (p.opacity > 0 && p.y < height) {
+            active = true;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+          }
+        }
+
+        if (active && elapsed < 4000) {
+          animationFrame = requestAnimationFrame(render);
+        } else {
+          ctx.clearRect(0, 0, width, height);
+        }
+      }
+
+      render();
+    })();
+  </script>
 </body>
 </html>

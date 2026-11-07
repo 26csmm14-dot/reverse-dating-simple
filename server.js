@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const db = require('./db.js');
+const telegram = require('./telegram.js');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
@@ -236,6 +237,11 @@ const server = http.createServer(async (req, res) => {
         appliedAt: new Date(),
       });
 
+      // Dispatch real-time Telegram alert to Pruthviraj with [Agree] & [Reject] buttons
+      telegram.sendProposalAlert(updated).catch((err) => {
+        console.warn('[Server] Telegram dispatch warning:', err.message);
+      });
+
       return sendJson(res, 200, {
         success: true,
         applicant: updated,
@@ -308,6 +314,8 @@ if (require.main === module) {
     server.listen(PORT, () => {
       console.log(`[Server] Running at http://localhost:${PORT}`);
       console.log(`[Server] Static files served from: ${PUBLIC_DIR}`);
+      // Start background decision listener for Telegram bot button clicks
+      telegram.startPolling(db);
     });
   });
 }
