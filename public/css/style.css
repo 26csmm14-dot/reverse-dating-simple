@@ -1,28 +1,36 @@
 /* ==========================================================================
    WANNA DATE U - Reverse Dating Web Application
-   Simple, clean, beginner-level CSS stylesheet
+   Clean, elegant White & Light Baby Pink Palette (Zero Purple, Zero Emojis)
    ========================================================================== */
 
-/* Reset & Base Variables */
 :root {
-  --bg-color: #0a0a0f;
-  --card-bg: #13131c;
-  --card-hover: #191924;
-  --border-color: #262638;
-  --border-focus: #ff7a00;
+  /* White & Very Light Baby Pink Palette */
+  --bg-color: #fdf5f7;
+  --bg-gradient: linear-gradient(180deg, #ffffff 0%, #fdf2f5 100%);
+  --card-bg: #ffffff;
+  --card-hover: #fffdfd;
+  --border-color: #fce1e8;
+  --border-focus: #f472b6;
   
-  --text-main: #f4f4f8;
-  --text-muted: #8e8ea0;
-  --text-dim: #606072;
+  --text-main: #1f2937;
+  --text-muted: #596372;
+  --text-dim: #9ca3af;
   
-  --accent: #ff7a00;
-  --accent-hover: #ff9433;
-  --accent-glow: rgba(255, 122, 0, 0.2);
+  --accent: #f472b6;
+  --accent-hover: #ec4899;
+  --accent-light: #fff0f3;
+  --accent-pill: #fde8ed;
+  --accent-text: #db2777;
+  --accent-glow: rgba(244, 114, 182, 0.22);
   
-  --success: #10b981;
-  --danger: #ef4444;
+  --input-bg: #ffffff;
+  --input-border: #ebd3da;
   
-  --radius: 14px;
+  --success: #059669;
+  --danger: #dc2626;
+  
+  --radius: 16px;
+  --radius-sm: 8px;
   --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
@@ -33,7 +41,9 @@
 }
 
 body {
-  background-color: var(--bg-color);
+  background: var(--bg-color);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text-main);
   font-family: var(--font-family);
   line-height: 1.6;
@@ -45,37 +55,37 @@ body {
 /* Container */
 .container {
   width: 100%;
-  max-width: 680px;
+  max-width: 640px;
   margin: 0 auto;
-  padding: 30px 20px 60px 20px;
+  padding: 40px 20px 60px 20px;
 }
 
 /* Header & Badges */
 .header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
 
 .badge {
   display: inline-block;
-  padding: 6px 14px;
-  background: rgba(255, 122, 0, 0.12);
-  border: 1px solid rgba(255, 122, 0, 0.3);
-  color: var(--accent);
+  padding: 6px 16px;
+  background: var(--accent-pill);
+  border: 1px solid var(--border-color);
+  color: var(--accent-text);
   border-radius: 30px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   margin-bottom: 14px;
 }
 
 .header h1 {
   font-size: 34px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 10px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.6px;
 }
 
 .header p {
@@ -83,6 +93,7 @@ body {
   font-size: 15px;
   max-width: 480px;
   margin: 0 auto;
+  line-height: 1.5;
 }
 
 /* Card Container */
@@ -90,8 +101,8 @@ body {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  padding: 34px 30px;
+  box-shadow: 0 12px 36px rgba(244, 114, 182, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 /* Form Groups */
@@ -110,7 +121,7 @@ body {
 .form-hint {
   font-size: 12px;
   color: var(--text-dim);
-  margin-top: 4px;
+  margin-top: 5px;
 }
 
 /* Inputs, Selects, and Textareas */
@@ -120,14 +131,19 @@ select,
 textarea {
   width: 100%;
   padding: 12px 14px;
-  background: #0d0d14;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  color: #ffffff;
-  font-size: 15px;
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 14.5px;
   font-family: inherit;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #adb5bd;
 }
 
 input:focus,
@@ -135,38 +151,52 @@ select:focus,
 textarea:focus {
   border-color: var(--border-focus);
   box-shadow: 0 0 0 3px var(--accent-glow);
+  background: #ffffff;
+}
+
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f472b6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 38px;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 textarea {
-  min-height: 90px;
+  min-height: 95px;
   resize: vertical;
 }
 
 /* Photo Section */
 .photo-uploader {
   border: 2px dashed var(--border-color);
-  border-radius: 10px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 24px 20px;
   text-align: center;
-  background: rgba(13, 13, 20, 0.5);
-  transition: border-color 0.2s;
+  background: var(--accent-light);
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .photo-uploader:hover {
   border-color: var(--accent);
+  background: #fff8fa;
 }
 
 .photo-preview {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  margin: 0 auto 15px auto;
+  margin: 0 auto 12px auto;
   overflow: hidden;
-  background: #1b1b28;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.12);
 }
 
 .photo-preview img {
@@ -175,9 +205,10 @@ textarea {
   object-fit: cover;
 }
 
-.photo-preview span {
-  font-size: 36px;
-  color: var(--text-dim);
+.photo-preview svg {
+  width: 48px;
+  height: 48px;
+  stroke: var(--accent);
 }
 
 .photo-actions {
@@ -194,8 +225,8 @@ textarea {
   align-items: center;
   justify-content: center;
   padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 15px;
+  border-radius: var(--radius-sm);
+  font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
   border: none;
@@ -207,62 +238,68 @@ textarea {
   background: var(--accent);
   color: #ffffff;
   width: 100%;
+  box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
 }
 
 .btn-primary:hover {
   background: var(--accent-hover);
-  box-shadow: 0 4px 15px var(--accent-glow);
+  box-shadow: 0 6px 18px rgba(236, 72, 153, 0.4);
 }
 
 .btn-secondary {
-  background: #1e1e2d;
+  background: #ffffff;
   color: var(--text-main);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   font-size: 13px;
-  padding: 8px 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
 }
 
 .btn-secondary:hover {
-  background: #28283c;
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent-text);
 }
 
 .btn-text {
   background: transparent;
-  color: var(--text-muted);
+  color: var(--accent-text);
   font-size: 13px;
+  font-weight: 600;
   padding: 6px 10px;
 }
 
 .btn-text:hover {
-  color: var(--accent);
+  color: var(--accent-hover);
+  text-decoration: underline;
 }
 
 /* Alert Banner */
 .alert {
   padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
   margin-bottom: 20px;
   display: none;
 }
 
 .alert-danger {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
 }
 
 .alert-success {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #86efac;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
 }
 
-/* Footer Note */
+/* Footer */
 .footer {
   text-align: center;
-  margin-top: 40px;
-  font-size: 13px;
+  margin-top: 35px;
+  font-size: 12.5px;
   color: var(--text-dim);
 }
 
@@ -272,15 +309,18 @@ textarea {
 }
 
 .footer a:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
+  .container {
+    padding: 24px 14px 40px 14px;
+  }
   .header h1 {
     font-size: 28px;
   }
   .card {
-    padding: 20px 16px;
+    padding: 22px 18px;
   }
 }

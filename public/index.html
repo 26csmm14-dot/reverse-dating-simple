@@ -10,8 +10,8 @@
   <div class="container">
     <!-- Header -->
     <header class="header">
-      <div class="badge">✨ Reverse Dating // Pruthviraj</div>
-      <h1>WANNA DATE U ;)</h1>
+      <div class="badge">Reverse Dating // Pruthviraj</div>
+      <h1>WANNA DATE U</h1>
       <p>Explore my life story, ambitions, and why I might just be your best decision this year. But first, introduce yourself, cutie.</p>
     </header>
 
@@ -23,42 +23,45 @@
       <form id="onboardingForm">
         <!-- Full Name -->
         <div class="form-group">
-          <label class="form-label" for="name">May I know your sweet name? <span style="color: var(--accent);">*</span></label>
+          <label class="form-label" for="name">May I know your sweet name? <span style="color: var(--accent-text);">*</span></label>
           <input type="text" id="name" name="name" placeholder="Tell me what to call you, cutie" required autocomplete="name">
-          <div class="form-hint">So I know who to brag about to my friends ;)</div>
+          <div class="form-hint">So I know who to brag about to my friends.</div>
         </div>
 
         <!-- Contact Platform -->
         <div class="form-group">
-          <label class="form-label" for="contactType">How should we stay in touch? <span style="color: var(--accent);">*</span></label>
+          <label class="form-label" for="contactType">How should we stay in touch? <span style="color: var(--accent-text);">*</span></label>
           <select id="contactType" name="contactType">
             <option value="instagram" selected>Instagram (@username &mdash; slide into my DMs)</option>
             <option value="telegram">Telegram (@username &mdash; secret chat mode)</option>
             <option value="snapchat">Snapchat (username &mdash; start a streak)</option>
             <option value="whatsapp">WhatsApp (Phone number &mdash; late night texting)</option>
             <option value="phone">Phone Call / SMS (&mdash; old school romance)</option>
-            <option value="email">Email Address (&mdash; digital love letters)</option>
+            <option value="email">Email Address (&mdash; digital love notes)</option>
           </select>
         </div>
 
         <!-- Contact Handle / Number -->
         <div class="form-group">
-          <label class="form-label" for="contact">Your Handle or Digits <span style="color: var(--accent);">*</span></label>
+          <label class="form-label" for="contact">Your Handle or Digits <span style="color: var(--accent-text);">*</span></label>
           <input type="text" id="contact" name="contact" placeholder="@your_cutest_handle" required>
-          <div class="form-hint" id="contactHint">Where my late-night texts should go ;)</div>
+          <div class="form-hint" id="contactHint">Where my late-night texts should go.</div>
         </div>
 
         <!-- Photo Section -->
         <div class="form-group">
-          <label class="form-label">A photo of your lovely face? ✨</label>
+          <label class="form-label">A photo of your lovely face?</label>
           <div class="photo-uploader">
             <div class="photo-preview" id="photoPreview">
-              <span id="previewPlaceholder">👤</span>
+              <svg id="previewPlaceholder" viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
               <img id="previewImage" src="" alt="Photo Preview" style="display: none;">
             </div>
 
-            <div id="photoStatusNote" class="form-hint" style="text-align: center; margin-bottom: 12px; color: var(--accent);">
-              Show me the face I&apos;m about to fall for...
+            <div id="photoStatusNote" class="form-hint" style="text-align: center; margin-bottom: 12px; color: var(--accent-text); font-weight: 500;">
+              Show me the face I am about to fall for...
             </div>
 
             <div class="photo-actions">
@@ -79,11 +82,11 @@
         <!-- Match Expectations -->
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <label class="form-label" for="expectations" style="margin-bottom: 0;">What&apos;s the recipe for winning your heart? 🍕</label>
-            <button type="button" class="btn btn-text" id="btnSkipExpectations">Keep it a mystery 😉</button>
+            <label class="form-label" for="expectations" style="margin-bottom: 0;">What is the recipe for winning your heart?</label>
+            <button type="button" class="btn btn-text" id="btnSkipExpectations">Keep it a mystery</button>
           </div>
-          <textarea id="expectations" name="expectations" placeholder="Tell me your green flags, ideal first date, favorite 2 AM snack, or how we should celebrate our anniversary ;)"></textarea>
-          <div class="form-hint">Don&apos;t hold back &mdash; tell me what makes you smile.</div>
+          <textarea id="expectations" name="expectations" placeholder="Tell me your green flags, ideal first date, favorite late night snack, or how we should celebrate our anniversary."></textarea>
+          <div class="form-hint">Do not hold back &mdash; tell me what makes you smile.</div>
         </div>
 
         <!-- Submit Button -->
