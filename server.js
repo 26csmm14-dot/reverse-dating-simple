@@ -252,6 +252,55 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  // 6. GET /api/admin/applicants (List all applicants for admin dashboard)
+  if (pathname === '/api/admin/applicants' && method === 'GET') {
+    try {
+      const applicants = await db.listApplicants();
+      return sendJson(res, 200, {
+        success: true,
+        count: applicants.length,
+        applicants,
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 7. POST /api/admin/decide (Accept or Reject applicant from admin dashboard)
+  if (pathname === '/api/admin/decide' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const { applicantId, action } = body;
+
+      if (!applicantId || !action || (action !== 'accept' && action !== 'reject')) {
+        return sendJson(res, 400, {
+          success: false,
+          error: 'Missing or invalid parameters. Requires applicantId and action ("accept" or "reject").',
+        });
+      }
+
+      const newStatus = action === 'accept' ? 'accepted' : 'rejected';
+      const updated = await db.updateApplicant(applicantId, {
+        status: newStatus,
+        decidedAt: new Date(),
+      });
+
+      if (!updated) {
+        return sendJson(res, 404, { success: false, error: 'Applicant not found.' });
+      }
+
+      console.log(`[Admin] Decision recorded via web dashboard: ${updated.name} -> ${newStatus.toUpperCase()}`);
+      return sendJson(res, 200, {
+        success: true,
+        applicant: updated,
+        status: newStatus,
+        message: `Applicant marked as ${newStatus}.`,
+      });
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
   // -------------------------------------------------------------
   // Static File Serving from public/
   // -------------------------------------------------------------
