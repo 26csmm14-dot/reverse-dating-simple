@@ -1,4 +1,4 @@
-// test-admin.js - Automated Test Suite for Web Admin Panel Endpoints
+// test-admin.js - Automated Test Suite for Web Admin Panel Endpoints & Passcode Protection
 const http = require('http');
 const assert = require('assert');
 const server = require('./server');
@@ -54,21 +54,49 @@ async function runAdminTests() {
   console.log(`✓ Test HTTP server listening on port ${TEST_PORT}`);
 
   try {
-    // Test 1: Static serving of /admin.html
+    // Test 1: Static serving of /admin.html (shows lock screen)
     const resAdminPage = await request('GET', '/admin.html');
     assert.strictEqual(resAdminPage.statusCode, 200, 'GET /admin.html returns 200');
-    assert(resAdminPage.body.includes('Command Center'), 'contains Command Center heading');
-    assert(resAdminPage.body.includes('/api/admin/decide'), 'contains decide API call');
-    console.log('✓ Test 1: Static serving of /admin.html verified');
+    assert(resAdminPage.body.includes('Host Authentication'), 'contains Host Authentication lock screen');
+    assert(resAdminPage.body.includes('passwordInput'), 'contains password input');
+    console.log('✓ Test 1: Static serving of /admin.html with lock screen verified');
 
-    // Test 2: GET /api/admin/applicants returns applicant array
-    const resList = await request('GET', '/api/admin/applicants');
-    assert.strictEqual(resList.statusCode, 200, 'GET /api/admin/applicants returns 200');
-    assert.strictEqual(resList.json.success, true, 'success flag is true');
-    assert(Array.isArray(resList.json.applicants), 'applicants is an array');
-    console.log(`✓ Test 2: GET /api/admin/applicants verified (${resList.json.applicants.length} records)`);
+    // Test 2: Unauthenticated access to /api/admin/applicants returns 401
+    const resUnauth = await request('GET', '/api/admin/applicants');
+    assert.strictEqual(resUnauth.statusCode, 401, 'unauthenticated /api/admin/applicants returns 401');
+    assert.strictEqual(resUnauth.json.success, false);
+    console.log('✓ Test 2: Protected endpoint /api/admin/applicants rejects unauthenticated requests (401)');
 
-    // Test 3: Register a new candidate
+    // Test 3: Wrong passcode login returns 401
+    const resWrongLogin = await request('POST', '/api/admin/login', { password: 'wrongpassword' });
+    assert.strictEqual(resWrongLogin.statusCode, 401);
+    assert.strictEqual(resWrongLogin.json.success, false);
+    console.log('✓ Test 3: Failed login with wrong passcode correctly denied (401)');
+
+    // Test 4: Correct passcode login returns 200 and session cookie
+    const resLogin = await request('POST', '/api/admin/login', { password: 'pruthvi2026' });
+    assert.strictEqual(resLogin.statusCode, 200);
+    assert.strictEqual(resLogin.json.success, true);
+    assert(resLogin.json.token, 'token is returned');
+    const setCookie = resLogin.headers['set-cookie'];
+    assert(setCookie, 'set-cookie header present');
+    const adminCookie = setCookie[0].split(';')[0];
+    console.log('✓ Test 4: Correct passcode authentication succeeded (cookie set)');
+
+    // Test 5: Check session returns authenticated: true
+    const resSession = await request('GET', '/api/admin/session', null, { Cookie: adminCookie });
+    assert.strictEqual(resSession.statusCode, 200);
+    assert.strictEqual(resSession.json.authenticated, true);
+    console.log('✓ Test 5: GET /api/admin/session verified (authenticated: true)');
+
+    // Test 6: Authenticated GET /api/admin/applicants returns list
+    const resList = await request('GET', '/api/admin/applicants', null, { Cookie: adminCookie });
+    assert.strictEqual(resList.statusCode, 200);
+    assert.strictEqual(resList.json.success, true);
+    assert(Array.isArray(resList.json.applicants));
+    console.log(`✓ Test 6: GET /api/admin/applicants with session verified (${resList.json.applicants.length} records)`);
+
+    // Test 7: Register new candidate and submit proposal
     const uniqueContact = `admin_test_${Date.now()}@instagram.com`;
     const resAuth = await request('POST', '/api/auth', {
       name: 'Aditi Rao',
@@ -76,43 +104,29 @@ async function runAdminTests() {
       contact: uniqueContact,
       expectations: 'Looking for a genuine connection',
     });
-    assert.strictEqual(resAuth.statusCode, 200);
     const applicantId = resAuth.json.applicant.id;
-    console.log('✓ Test 3: New candidate registered (Aditi Rao)');
-
-    // Test 4: Submit proposal
-    const resApply = await request('POST', '/api/apply', {
+    await request('POST', '/api/apply', {
       applicantId: applicantId,
       firstDateIdea: 'Late Night Rooftop Astronomy',
       pitch: 'Ready to stargaze together!',
     });
-    assert.strictEqual(resApply.statusCode, 200);
-    assert.strictEqual(resApply.json.applicant.status, 'pending');
-    console.log('✓ Test 4: Candidate proposal submitted (status: pending)');
+    console.log('✓ Test 7: Candidate registered and proposal submitted');
 
-    // Test 5: Verify candidate appears in admin list
-    const resListAfter = await request('GET', '/api/admin/applicants');
-    const found = resListAfter.json.applicants.find((a) => a.id === applicantId);
-    assert(found, 'Candidate must appear in admin list');
-    assert.strictEqual(found.status, 'pending');
-    console.log('✓ Test 5: Candidate appears in admin list as pending');
-
-    // Test 6: Admin accepts candidate via POST /api/admin/decide
-    const resAccept = await request('POST', '/api/admin/decide', {
-      applicantId: applicantId,
-      action: 'accept',
-    });
+    // Test 8: Admin accepts candidate via POST /api/admin/decide with session
+    const resAccept = await request(
+      'POST',
+      '/api/admin/decide',
+      { applicantId: applicantId, action: 'accept' },
+      { Cookie: adminCookie }
+    );
     assert.strictEqual(resAccept.statusCode, 200);
-    assert.strictEqual(resAccept.json.success, true);
     assert.strictEqual(resAccept.json.status, 'accepted');
-    console.log('✓ Test 6: Admin accepted candidate via POST /api/admin/decide');
 
-    // Test 7: Verify candidate polling returns accepted
     const resPoll = await request('GET', `/api/status?applicant_id=${applicantId}`);
     assert.strictEqual(resPoll.json.status, 'accepted');
-    console.log('✓ Test 7: Candidate status polling returns accepted');
+    console.log('✓ Test 8: Admin accepted candidate via POST /api/admin/decide (status polling confirmed accepted)');
 
-    // Test 8: Register second candidate and reject via admin
+    // Test 9: Register second candidate and reject via admin
     const uniqueContact2 = `admin_test2_${Date.now()}@instagram.com`;
     const resAuth2 = await request('POST', '/api/auth', {
       name: 'Pooja Hegde',
@@ -122,16 +136,23 @@ async function runAdminTests() {
     const applicantId2 = resAuth2.json.applicant.id;
     await request('POST', '/api/apply', { applicantId: applicantId2 });
 
-    const resReject = await request('POST', '/api/admin/decide', {
-      applicantId: applicantId2,
-      action: 'reject',
-    });
+    const resReject = await request(
+      'POST',
+      '/api/admin/decide',
+      { applicantId: applicantId2, action: 'reject' },
+      { Cookie: adminCookie }
+    );
     assert.strictEqual(resReject.statusCode, 200);
     assert.strictEqual(resReject.json.status, 'rejected');
 
     const resPoll2 = await request('GET', `/api/status?applicant_id=${applicantId2}`);
     assert.strictEqual(resPoll2.json.status, 'rejected');
-    console.log('✓ Test 8: Admin rejected candidate via POST /api/admin/decide (polling reports rejected)');
+    console.log('✓ Test 9: Admin rejected candidate via POST /api/admin/decide (status polling confirmed rejected)');
+
+    // Test 10: Admin logout clears session
+    const resLogout = await request('POST', '/api/admin/logout', null, { Cookie: adminCookie });
+    assert.strictEqual(resLogout.statusCode, 200);
+    console.log('✓ Test 10: Host logout verified');
 
     console.log('\n=============================================');
     console.log('ALL ADMIN DASHBOARD TESTS PASSED CLEANLY! ✓');

@@ -264,7 +264,37 @@
   </style>
 </head>
 <body>
-  <div class="admin-container">
+
+  <!-- 1. Passcode Lock Screen -->
+  <div id="lockView" style="display: none; max-width: 440px; margin: 80px auto; padding: 0 20px; text-align: center;">
+    <div class="card" style="padding: 40px 30px;">
+      <div class="badge" style="background: #fef2f2; border-color: #fecaca; color: #dc2626; font-family: 'Space Grotesk', monospace, sans-serif; font-weight: 700; letter-spacing: 0.5px;">RESTRICTED AREA</div>
+      <h2 style="font-size: 26px; font-weight: 900; color: var(--text-main); margin-bottom: 8px;">
+        Host Authentication
+      </h2>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+        Enter your private host password to access the decision command center.
+      </p>
+
+      <div id="loginError" class="alert alert-danger" style="display: none; margin-bottom: 16px;"></div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group" style="text-align: left; margin-bottom: 20px;">
+          <label class="form-label" for="passwordInput">Host Passcode</label>
+          <input type="password" id="passwordInput" placeholder="Enter host passcode..." required style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px;" autofocus>
+        </div>
+        <button type="submit" id="btnLogin" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 14px; font-weight: 700;">
+          Unlock Command Center &rarr;
+        </button>
+      </form>
+    </div>
+    <div style="margin-top: 24px;">
+      <a href="/dashboard.html" style="font-size: 13px; color: var(--text-muted); text-decoration: none;">&larr; Return to Pitch Deck</a>
+    </div>
+  </div>
+
+  <!-- 2. Authenticated Command Center Dashboard -->
+  <div id="dashboardView" style="display: none;" class="admin-container">
     <!-- Navigation Bar -->
     <header class="admin-nav">
       <div class="nav-brand">
@@ -276,7 +306,8 @@
       </div>
       <div style="display: flex; gap: 10px; align-items: center;">
         <span id="pollIndicator" style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Live polling active (3s)</span>
-        <a href="/dashboard.html" target="_blank" class="btn btn-secondary" style="padding: 6px 16px; font-size: 12px; text-decoration: none;">View Pitch Deck &rarr;</a>
+        <a href="/dashboard.html" target="_blank" class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px; text-decoration: none;">View Pitch Deck &rarr;</a>
+        <button onclick="handleLogout()" class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px; color: #dc2626; border-color: #fecaca; cursor: pointer;">Lock Panel</button>
       </div>
     </header>
 
@@ -330,6 +361,7 @@
   <script>
     let applicantsData = [];
     let currentFilter = 'all';
+    let pollInterval = null;
 
     function showToast(message) {
       const toast = document.getElementById('toast');
@@ -338,6 +370,77 @@
       setTimeout(() => {
         toast.classList.remove('visible');
       }, 3500);
+    }
+
+    async function checkAuthSession() {
+      try {
+        const res = await fetch('/api/admin/session');
+        const data = await res.json();
+        if (data.authenticated) {
+          showDashboard();
+        } else {
+          showLockScreen();
+        }
+      } catch (e) {
+        showLockScreen();
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById('lockView').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'block';
+      fetchApplicants();
+      if (!pollInterval) {
+        pollInterval = setInterval(fetchApplicants, 3000);
+      }
+    }
+
+    function showLockScreen() {
+      document.getElementById('lockView').style.display = 'block';
+      document.getElementById('dashboardView').style.display = 'none';
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const password = document.getElementById('passwordInput').value.trim();
+      const errEl = document.getElementById('loginError');
+      const btn = document.getElementById('btnLogin');
+      errEl.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          document.getElementById('passwordInput').value = '';
+          showDashboard();
+        } else {
+          errEl.textContent = data.error || 'Incorrect host passcode.';
+          errEl.style.display = 'block';
+        }
+      } catch (err) {
+        errEl.textContent = 'Network error: ' + err.message;
+        errEl.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Unlock Command Center \u2192';
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await fetch('/api/admin/logout', { method: 'POST' });
+      } catch (e) {}
+      showLockScreen();
     }
 
     function setFilter(filter) {
@@ -351,6 +454,10 @@
     async function fetchApplicants() {
       try {
         const res = await fetch('/api/admin/applicants');
+        if (res.status === 401) {
+          showLockScreen();
+          return;
+        }
         const data = await res.json();
         if (data.success && Array.isArray(data.applicants)) {
           applicantsData = data.applicants;
@@ -477,6 +584,10 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ applicantId, action }),
         });
+        if (res.status === 401) {
+          showLockScreen();
+          return;
+        }
         const data = await res.json();
         if (data.success) {
           showToast(action === 'accept' ? `${name} accepted! Candidate screen transitioning to celebration.` : `${name} rejected. Candidate screen transitioning to 404.`);
@@ -499,11 +610,8 @@
         .replace(/'/g, '&#039;');
     }
 
-    // Initial load
-    fetchApplicants();
-
-    // Auto polling every 3 seconds for live updates
-    setInterval(fetchApplicants, 3000);
+    // Initial session check
+    checkAuthSession();
   </script>
 </body>
 </html>

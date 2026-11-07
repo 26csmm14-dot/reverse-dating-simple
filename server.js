@@ -11,6 +11,22 @@ const telegram = require('./telegram.js');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'pruthvi2026';
+const activeAdminSessions = new Set();
+
+function isHostAuthorized(req) {
+  const cookie = getCookie(req, 'admin_auth');
+  const authHeader = req.headers['authorization'];
+  const passHeader = req.headers['x-admin-password'];
+
+  if (passHeader && passHeader === ADMIN_PASSWORD) return true;
+  if (authHeader) {
+    const token = authHeader.replace(/^Bearer\s+/i, '');
+    if (token === ADMIN_PASSWORD || activeAdminSessions.has(token)) return true;
+  }
+  if (cookie && activeAdminSessions.has(cookie)) return true;
+  return false;
+}
 
 // MIME type map for static file streaming
 const MIME_TYPES = {
@@ -252,8 +268,60 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // 6. GET /api/admin/applicants (List all applicants for admin dashboard)
+  // 6. POST /api/admin/login (Authenticate Host with Passcode)
+  if (pathname === '/api/admin/login' && method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const { password } = body;
+
+      if (!password || password !== ADMIN_PASSWORD) {
+        return sendJson(res, 401, {
+          success: false,
+          error: 'Incorrect passcode. Access to host command center denied.',
+        });
+      }
+
+      const token = 'host_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+      activeAdminSessions.add(token);
+
+      return sendJson(
+        res,
+        200,
+        { success: true, token, message: 'Host authenticated successfully.' },
+        {
+          'Set-Cookie': `admin_auth=${token}; Path=/; SameSite=Lax; Max-Age=86400`,
+        }
+      );
+    } catch (err) {
+      return sendJson(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // 7. GET /api/admin/session (Check if Host is Authenticated)
+  if (pathname === '/api/admin/session' && method === 'GET') {
+    const authenticated = isHostAuthorized(req);
+    return sendJson(res, 200, { authenticated });
+  }
+
+  // 8. POST /api/admin/logout (Log out Host)
+  if (pathname === '/api/admin/logout' && method === 'POST') {
+    const cookie = getCookie(req, 'admin_auth');
+    if (cookie) activeAdminSessions.delete(cookie);
+    return sendJson(
+      res,
+      200,
+      { success: true, message: 'Host logged out.' },
+      {
+        'Set-Cookie': 'admin_auth=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+      }
+    );
+  }
+
+  // 9. GET /api/admin/applicants (List all applicants for admin dashboard - Protected)
   if (pathname === '/api/admin/applicants' && method === 'GET') {
+    if (!isHostAuthorized(req)) {
+      return sendJson(res, 401, { success: false, error: 'Unauthorized: Host passcode required.' });
+    }
     try {
       const applicants = await db.listApplicants();
       return sendJson(res, 200, {
@@ -266,8 +334,11 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // 7. POST /api/admin/decide (Accept or Reject applicant from admin dashboard)
+  // 10. POST /api/admin/decide (Accept or Reject applicant from admin dashboard - Protected)
   if (pathname === '/api/admin/decide' && method === 'POST') {
+    if (!isHostAuthorized(req)) {
+      return sendJson(res, 401, { success: false, error: 'Unauthorized: Host passcode required.' });
+    }
     try {
       const body = await parseJsonBody(req);
       const { applicantId, action } = body;
