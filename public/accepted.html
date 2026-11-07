@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connection Unlocked // WANNA DATE U</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .channel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .channel-card {
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(244, 114, 182, 0.06);
+    }
+    .channel-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(244, 114, 182, 0.15);
+    }
+    .channel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .channel-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .channel-handle {
+      font-size: 13.5px;
+      font-family: monospace;
+      color: var(--accent-text);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .channel-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .channel-btn {
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" style="max-width: 760px; text-align: center;">
+    <div class="badge">Connection Unlocked</div>
+    <h1 style="font-size: 36px; font-weight: 900; color: var(--text-main); margin-bottom: 10px;">
+      Let&apos;s stay in touch
+    </h1>
+    <p style="color: var(--text-muted); font-size: 15px; max-width: 500px; margin: 0 auto 30px auto;">
+      Pruthviraj has agreed to connect. Choose your preferred platform below to say hi or slide directly into his DMs.
+    </p>
+
+    <div class="channel-grid">
+      <!-- Instagram -->
+      <div class="channel-card">
+        <div>
+          <div class="channel-header">
+            <span class="channel-name">Instagram</span>
+            <span class="badge" style="margin-bottom: 0; padding: 2px 8px; font-size: 10px;">Primary</span>
+          </div>
+          <div class="channel-handle">@ur_frnd.lee_neighbor</div>
+          <div class="channel-desc">Follow or drop a DM directly on Instagram stories.</div>
+        </div>
+        <a href="https://www.instagram.com/ur_frnd.lee_neighbor?exln=Y2g1NHo4dTYwN3N3" target="_blank" rel="noopener noreferrer" class="btn btn-primary channel-btn">Open Instagram &rarr;</a>
+      </div>
+
+      <!-- Telegram -->
+      <div class="channel-card">
+        <div>
+          <div class="channel-header">
+            <span class="channel-name">Telegram</span>
+            <span class="badge" style="margin-bottom: 0; padding: 2px 8px; font-size: 10px;">Direct</span>
+          </div>
+          <div class="channel-handle">@Mokunaa</div>
+          <div class="channel-desc">Instant direct chat with Pruthviraj on Telegram.</div>
+        </div>
+        <a href="https://t.me/Mokunaa" target="_blank" rel="noopener noreferrer" class="btn btn-secondary channel-btn">Open Telegram &rarr;</a>
+      </div>
+
+      <!-- Snapchat -->
+      <div class="channel-card">
+        <div>
+          <div class="channel-header">
+            <span class="channel-name">Snapchat</span>
+            <span class="badge" style="margin-bottom: 0; padding: 2px 8px; font-size: 10px;">Snaps</span>
+          </div>
+          <div class="channel-handle">itznotpruthvi</div>
+          <div class="channel-desc">Add on Snapchat for daily moments and streaks.</div>
+        </div>
+        <a href="https://www.snapchat.com/add/itznotpruthvi?share_id=I9K-xg9BemE&locale=en-US" target="_blank" rel="noopener noreferrer" class="btn btn-secondary channel-btn">Open Snapchat &rarr;</a>
+      </div>
+
+      <!-- WhatsApp -->
+      <div class="channel-card">
+        <div>
+          <div class="channel-header">
+            <span class="channel-name">WhatsApp</span>
+            <span class="badge" style="margin-bottom: 0; padding: 2px 8px; font-size: 10px;">Chat</span>
+          </div>
+          <div class="channel-handle">wa.me/qr/LJ6L7N35FTO6J1</div>
+          <div class="channel-desc">Chat directly with Pruthviraj on WhatsApp.</div>
+        </div>
+        <a href="https://wa.me/qr/LJ6L7N35FTO6J1" target="_blank" rel="noopener noreferrer" class="btn btn-secondary channel-btn">Open WhatsApp &rarr;</a>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <a href="/dashboard.html" class="btn btn-text">&larr; Return to Pitch Deck</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>&copy; 2026 Pruthviraj &bull; BSc Computer Science &bull; Kristu Jayanti</p>
+    </footer>
+  </div>
+</body>
+</html>
