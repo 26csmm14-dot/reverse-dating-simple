@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Expectations skip button
   const btnSkipExpectations = document.getElementById('btnSkipExpectations');
 
+  const contactHint = document.getElementById('contactHint');
+  const photoStatusNote = document.getElementById('photoStatusNote');
+
   let currentPhoto = '';
 
   // 1. Check existing session on load
@@ -52,28 +55,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   checkSession();
 
-  // 2. Dynamic contact input placeholder
+  // 2. Dynamic contact input placeholder & cheesy hints
   contactTypeSelect.addEventListener('change', () => {
     const type = contactTypeSelect.value;
     switch (type) {
       case 'instagram':
-        contactInput.placeholder = '@your_instagram';
+        contactInput.placeholder = '@your_cutest_handle';
+        if (contactHint) contactHint.textContent = 'Your actual handle so I can double-tap your stories ;)';
         break;
       case 'telegram':
-        contactInput.placeholder = '@your_telegram';
+        contactInput.placeholder = '@your_secret_handle';
+        if (contactHint) contactHint.textContent = 'Where we can text safely and exchange memes 24/7 ;)';
         break;
       case 'snapchat':
-        contactInput.placeholder = 'your_snapchat';
+        contactInput.placeholder = 'your_snap_username';
+        if (contactHint) contactHint.textContent = 'Send me your funniest face snaps ;)';
         break;
       case 'whatsapp':
+        contactInput.placeholder = '+91 98765 43210';
+        if (contactHint) contactHint.textContent = 'Real number so my messages reach only you ;)';
+        break;
       case 'phone':
         contactInput.placeholder = '+91 98765 43210';
+        if (contactHint) contactHint.textContent = 'So I can call you when you\'re on my mind ;)';
         break;
       case 'email':
-        contactInput.placeholder = 'you@example.com';
+        contactInput.placeholder = 'your_sweet_email@example.com';
+        if (contactHint) contactHint.textContent = 'Where my digital love notes won\'t bounce ;)';
         break;
       default:
         contactInput.placeholder = 'Contact handle';
+        if (contactHint) contactHint.textContent = 'Where my late-night texts should go ;)';
     }
   });
 
@@ -123,6 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentPhoto = canvas.toDataURL('image/jpeg', 0.82);
         showPhotoPreview(currentPhoto);
+        if (photoStatusNote) {
+          photoStatusNote.textContent = 'Looking gorgeous! Ready to steal my heart ✨';
+          photoStatusNote.style.color = '#10b981';
+        }
         hideAlert();
       };
       img.src = event.target.result;
@@ -142,6 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (urlVal) {
       currentPhoto = urlVal;
       showPhotoPreview(urlVal);
+      if (photoStatusNote) {
+        photoStatusNote.textContent = 'Looking gorgeous! Ready to steal my heart ✨';
+        photoStatusNote.style.color = '#10b981';
+      }
     }
   });
 
@@ -153,10 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
     previewPlaceholder.textContent = '👤';
     photoUrlInput.value = '';
     urlContainer.style.display = 'none';
+    if (photoStatusNote) {
+      photoStatusNote.textContent = 'Too shy? Your charm already speaks for itself ;)';
+      photoStatusNote.style.color = 'var(--text-muted)';
+    }
   });
 
   btnSkipExpectations.addEventListener('click', () => {
-    expectationsInput.value = 'Skipped — Open to exploring the vibe organically';
+    expectationsInput.value = 'Skipped — I prefer to let the chemistry happen organically ;)';
   });
 
   // Helper: Display Photo Preview
