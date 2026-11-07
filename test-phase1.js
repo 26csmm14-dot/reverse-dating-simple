@@ -74,7 +74,7 @@ async function runTests() {
     const resCss = await request('GET', '/css/style.css');
     assert.strictEqual(resCss.statusCode, 200, 'GET /css/style.css should return 200 OK');
     assert(resCss.headers['content-type'].includes('text/css'), 'Content-Type should be text/css');
-    assert(resCss.body.includes('--accent: #f472b6;'), 'style.css defines baby pink theme');
+    assert(resCss.body.includes('--accent: #ff7a00;'), 'style.css defines orange accent theme');
     console.log('✓ Test 2: Static file serving (style.css) passed');
 
     // 5. Test static file: js/onboarding.js

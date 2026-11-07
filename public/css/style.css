@@ -4,24 +4,24 @@
    ========================================================================== */
 
 :root {
-  /* White & Distinct Light Baby Pink Palette */
+  /* Clean White, Baby Pink Background, and Vibrant Orange Accents */
   --bg-color: #ffd0dc;
   --bg-gradient: linear-gradient(180deg, #ffe8f0 0%, #ffccd8 100%);
   --card-bg: #ffffff;
   --card-hover: #ffffff;
   --border-color: #f7bccc;
-  --border-focus: #f472b6;
+  --border-focus: #ff7a00;
   
   --text-main: #1f2937;
   --text-muted: #596372;
   --text-dim: #9ca3af;
   
-  --accent: #f472b6;
-  --accent-hover: #ec4899;
-  --accent-light: #fff0f5;
-  --accent-pill: #ffe0ea;
-  --accent-text: #db2777;
-  --accent-glow: rgba(244, 114, 182, 0.25);
+  --accent: #ff7a00;
+  --accent-hover: #ea580c;
+  --accent-light: #fff7ed;
+  --accent-pill: #ffedd5;
+  --accent-text: #ea580c;
+  --accent-glow: rgba(255, 122, 0, 0.25);
   
   --input-bg: #ffffff;
   --input-border: #f2c0ce;
@@ -102,7 +102,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   padding: 34px 30px;
-  box-shadow: 0 12px 36px rgba(244, 114, 182, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 12px 36px rgba(255, 122, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 /* Form Groups */
@@ -156,7 +156,7 @@ textarea:focus {
 
 select {
   cursor: pointer;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f472b6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff7a00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 16px;
@@ -238,12 +238,12 @@ textarea {
   background: var(--accent);
   color: #ffffff;
   width: 100%;
-  box-shadow: 0 4px 14px rgba(244, 114, 182, 0.35);
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.35);
 }
 
 .btn-primary:hover {
   background: var(--accent-hover);
-  box-shadow: 0 6px 18px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.4);
 }
 
 .btn-secondary {
@@ -337,7 +337,7 @@ textarea {
   position: sticky;
   top: 15px;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(244, 114, 182, 0.08);
+  box-shadow: 0 4px 20px rgba(255, 122, 0, 0.08);
 }
 
 .nav-brand {
@@ -373,7 +373,7 @@ textarea {
   padding: 40px 30px;
   text-align: center;
   margin-bottom: 40px;
-  box-shadow: 0 14px 40px rgba(244, 114, 182, 0.09);
+  box-shadow: 0 14px 40px rgba(255, 122, 0, 0.09);
 }
 
 .hero-avatar-frame {
@@ -382,8 +382,8 @@ textarea {
   border-radius: 50%;
   margin: 0 auto 20px auto;
   padding: 4px;
-  background: linear-gradient(135deg, var(--accent), #fbcfe8);
-  box-shadow: 0 8px 24px rgba(244, 114, 182, 0.25);
+  background: linear-gradient(135deg, var(--accent), #fed7aa);
+  box-shadow: 0 8px 24px rgba(255, 122, 0, 0.25);
 }
 
 .hero-avatar-frame img {
@@ -473,14 +473,14 @@ textarea {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 22px;
-  box-shadow: 0 4px 16px rgba(244, 114, 182, 0.05);
+  box-shadow: 0 4px 16px rgba(255, 122, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .card-item:hover {
   transform: translateY(-2px);
   border-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(244, 114, 182, 0.12);
+  box-shadow: 0 8px 24px rgba(255, 122, 0, 0.12);
 }
 
 .card-item h3 {
@@ -562,7 +562,7 @@ textarea {
 
 .date-option.selected {
   border-color: var(--accent);
-  background: #fff8fa;
+  background: #fff7ed;
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
@@ -618,7 +618,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 10px 30px rgba(244, 114, 182, 0.22);
+  box-shadow: 0 10px 30px rgba(255, 122, 0, 0.22);
   z-index: 99;
 }
 
