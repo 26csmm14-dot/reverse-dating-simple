@@ -95,6 +95,9 @@ const server = http.createServer(async (req, res) => {
   const pathname = reqUrl.pathname;
   const method = req.method.toUpperCase();
 
+  // Ensure DB connection is active (critical for Vercel serverless executions)
+  await db.connectDB();
+
   // CORS preflight handling
   if (method === 'OPTIONS') {
     res.writeHead(204, {
@@ -370,6 +373,33 @@ const server = http.createServer(async (req, res) => {
     } catch (err) {
       return sendJson(res, 500, { success: false, error: err.message });
     }
+  }
+
+  // 11. POST /api/telegram-webhook (Serverless Webhook Receiver for Vercel)
+  if (pathname === '/api/telegram-webhook' && method === 'POST') {
+    try {
+      const update = await parseJsonBody(req);
+      if (update && update.callback_query) {
+        await telegram.handleCallbackQuery(update.callback_query, db);
+      }
+      return sendJson(res, 200, { ok: true });
+    } catch (err) {
+      return sendJson(res, 500, { ok: false, error: err.message });
+    }
+  }
+
+  // 12. GET /api/telegram-set-webhook (1-Click Webhook Setup for Vercel)
+  if (pathname === '/api/telegram-set-webhook' && method === 'GET') {
+    if (!isHostAuthorized(req)) {
+      return sendJson(res, 401, { success: false, error: 'Unauthorized: Host passcode required.' });
+    }
+    const webhookUrl = `https://${host}/api/telegram-webhook`;
+    const tgRes = await telegram.tgRequest('setWebhook', { url: webhookUrl });
+    return sendJson(res, 200, {
+      success: tgRes.ok,
+      webhookUrl,
+      telegramResponse: tgRes,
+    });
   }
 
   // -------------------------------------------------------------
