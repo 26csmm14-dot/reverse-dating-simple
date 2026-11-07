@@ -8,23 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const expectationsInput = document.getElementById('expectations');
   const btnSubmit = document.getElementById('btnSubmit');
 
-  // Photo elements
-  const fileInput = document.getElementById('fileInput');
-  const btnUploadFile = document.getElementById('btnUploadFile');
-  const btnToggleUrl = document.getElementById('btnToggleUrl');
-  const btnSkipPhoto = document.getElementById('btnSkipPhoto');
-  const urlContainer = document.getElementById('urlInputContainer');
-  const photoUrlInput = document.getElementById('photoUrl');
-  const previewImage = document.getElementById('previewImage');
-  const previewPlaceholder = document.getElementById('previewPlaceholder');
-
-  // Expectations skip button
+  // Expectations mystery button
   const btnSkipExpectations = document.getElementById('btnSkipExpectations');
-
   const contactHint = document.getElementById('contactHint');
-  const photoStatusNote = document.getElementById('photoStatusNote');
-
-  let currentPhoto = '';
 
   // 1. Check existing session on load
   async function checkSession() {
@@ -89,104 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 3. Photo Upload with Canvas Compression
-  btnUploadFile.addEventListener('click', () => {
-    fileInput.click();
-  });
-
-  fileInput.addEventListener('change', (e) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      showAlert('Please choose an image file (PNG, JPG, or WebP).');
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      showAlert('Image file must be under 5MB.');
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        // Compress image using canvas
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 800; // Optimal size for fast mobile upload and Telegram bot
-
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        currentPhoto = canvas.toDataURL('image/jpeg', 0.82);
-        showPhotoPreview(currentPhoto);
-        if (photoStatusNote) {
-          photoStatusNote.textContent = 'Looking gorgeous! Ready to steal my heart.';
-          photoStatusNote.style.color = '#059669';
-        }
-        hideAlert();
-      };
-      img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  // 4. Toggle URL Input & Preview
-  btnToggleUrl.addEventListener('click', () => {
-    const isVisible = urlContainer.style.display !== 'none';
-    urlContainer.style.display = isVisible ? 'none' : 'block';
-    if (!isVisible) photoUrlInput.focus();
-  });
-
-  photoUrlInput.addEventListener('input', () => {
-    const urlVal = photoUrlInput.value.trim();
-    if (urlVal) {
-      currentPhoto = urlVal;
-      showPhotoPreview(urlVal);
-      if (photoStatusNote) {
-        photoStatusNote.textContent = 'Looking gorgeous! Ready to steal my heart.';
-        photoStatusNote.style.color = '#059669';
-      }
-    }
-  });
-
-  // 5. Skip Handlers
-  btnSkipPhoto.addEventListener('click', () => {
-    currentPhoto = 'default-avatar';
-    previewImage.style.display = 'none';
-    previewPlaceholder.style.display = 'block';
-    photoUrlInput.value = '';
-    urlContainer.style.display = 'none';
-    if (photoStatusNote) {
-      photoStatusNote.textContent = 'Too shy? Your charm already speaks for itself.';
-      photoStatusNote.style.color = 'var(--text-dim)';
-    }
-  });
-
-  btnSkipExpectations.addEventListener('click', () => {
-    expectationsInput.value = 'Skipped — I prefer to let the chemistry happen organically.';
-  });
-
-  // Helper: Display Photo Preview
-  function showPhotoPreview(src) {
-    previewImage.src = src;
-    previewImage.style.display = 'block';
-    previewPlaceholder.style.display = 'none';
+  // 3. Skip / Mystery Expectations Handler
+  if (btnSkipExpectations) {
+    btnSkipExpectations.addEventListener('click', () => {
+      expectationsInput.value = 'Skipped — I prefer to let the chemistry happen organically.';
+    });
   }
 
   // Helper: Show/Hide Alert Banner
@@ -199,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     alertBanner.style.display = 'none';
   }
 
-  // 6. Handle Form Submit
+  // 4. Handle Form Submit
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     hideAlert();
@@ -229,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
           name,
           contactType,
           contact,
-          photo: currentPhoto || 'default-avatar',
+          photo: 'default-avatar',
           expectations,
         }),
       });
