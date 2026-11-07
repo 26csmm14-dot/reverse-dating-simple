@@ -51,16 +51,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Handle applicant status routing and banner
-  function handleStatusChange(status) {
+  function handleStatusChange(status, isLivePoll = false) {
     if (status === 'accepted') {
       if (pollInterval) clearInterval(pollInterval);
-      window.location.href = '/accepted.html';
+      if (isLivePoll) {
+        // Only redirect automatically if decision happened during active live polling
+        window.location.href = '/accepted.html';
+        return;
+      }
+      // If user navigated or returned to pitch deck from accepted.html, allow them to stay on portfolio!
+      isPending = false;
+      pendingBanner.style.display = 'none';
+      btnOpenModal.textContent = 'Connection Unlocked \u2192';
+      btnOpenModal.disabled = false;
+      btnOpenModal.onclick = () => {
+        window.location.href = '/accepted.html';
+      };
       return;
     }
 
     if (status === 'rejected') {
       if (pollInterval) clearInterval(pollInterval);
-      window.location.href = '/rejected.html';
+      if (isLivePoll) {
+        window.location.href = '/rejected.html';
+        return;
+      }
+      isPending = false;
+      pendingBanner.style.display = 'none';
+      btnOpenModal.textContent = 'Application Concluded';
+      btnOpenModal.disabled = true;
+      btnOpenModal.onclick = null;
       return;
     }
 
@@ -69,12 +89,14 @@ document.addEventListener('DOMContentLoaded', () => {
       pendingBanner.style.display = 'flex';
       btnOpenModal.textContent = 'Application Pending...';
       btnOpenModal.disabled = true;
+      btnOpenModal.onclick = null;
       startStatusPolling();
     } else {
       isPending = false;
       pendingBanner.style.display = 'none';
       btnOpenModal.textContent = 'Submit Proposal \u2192';
       btnOpenModal.disabled = false;
+      btnOpenModal.onclick = null;
     }
   }
 
@@ -88,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(`/api/status?applicant_id=${encodeURIComponent(applicant.id)}`);
         const data = await res.json();
         if (data.status && data.status !== 'pending' && data.status !== 'viewing') {
-          handleStatusChange(data.status);
+          handleStatusChange(data.status, true);
         }
       } catch (e) {
         // quiet ignore
@@ -112,6 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4. Modal Open & Close
   btnOpenModal.addEventListener('click', () => {
+    if (applicant && applicant.status === 'accepted') {
+      window.location.href = '/accepted.html';
+      return;
+    }
     if (isPending) return;
     if (!applicant || !applicant.id) {
       window.location.href = '/index.html';
