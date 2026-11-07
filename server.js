@@ -7,7 +7,6 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const db = require('./db.js');
-const telegram = require('./telegram.js');
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
@@ -256,11 +255,6 @@ const server = http.createServer(async (req, res) => {
         appliedAt: new Date(),
       });
 
-      // Dispatch real-time Telegram alert to Pruthviraj with [Agree] & [Reject] buttons
-      telegram.sendProposalAlert(updated).catch((err) => {
-        console.warn('[Server] Telegram dispatch warning:', err.message);
-      });
-
       return sendJson(res, 200, {
         success: true,
         applicant: updated,
@@ -375,33 +369,6 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
-  // 11. POST /api/telegram-webhook (Serverless Webhook Receiver for Vercel)
-  if (pathname === '/api/telegram-webhook' && method === 'POST') {
-    try {
-      const update = await parseJsonBody(req);
-      if (update && update.callback_query) {
-        await telegram.handleCallbackQuery(update.callback_query, db);
-      }
-      return sendJson(res, 200, { ok: true });
-    } catch (err) {
-      return sendJson(res, 500, { ok: false, error: err.message });
-    }
-  }
-
-  // 12. GET /api/telegram-set-webhook (1-Click Webhook Setup for Vercel)
-  if (pathname === '/api/telegram-set-webhook' && method === 'GET') {
-    if (!isHostAuthorized(req)) {
-      return sendJson(res, 401, { success: false, error: 'Unauthorized: Host passcode required.' });
-    }
-    const webhookUrl = `https://${host}/api/telegram-webhook`;
-    const tgRes = await telegram.tgRequest('setWebhook', { url: webhookUrl });
-    return sendJson(res, 200, {
-      success: tgRes.ok,
-      webhookUrl,
-      telegramResponse: tgRes,
-    });
-  }
-
   // -------------------------------------------------------------
   // Static File Serving from public/
   // -------------------------------------------------------------
@@ -464,8 +431,6 @@ if (require.main === module) {
     server.listen(PORT, () => {
       console.log(`[Server] Running at http://localhost:${PORT}`);
       console.log(`[Server] Static files served from: ${PUBLIC_DIR}`);
-      // Start background decision listener for Telegram bot button clicks
-      telegram.startPolling(db);
     });
   });
 }
