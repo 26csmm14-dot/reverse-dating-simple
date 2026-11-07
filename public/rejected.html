@@ -20,8 +20,8 @@
       <h1 style="font-size: 38px; font-weight: 900; color: var(--text-main); margin-bottom: 28px; line-height: 1.1; letter-spacing: -0.5px;">
         LOVE<br>NOT FOUND
       </h1>
-      <a href="/index.html" class="btn btn-primary" style="display: inline-block; width: auto; padding: 12px 28px;">
-        Return to Home &rarr;
+      <a href="/index.html?reset=true" onclick="handleBackToLogin(event)" class="btn btn-primary" style="display: inline-block; width: auto; padding: 12px 28px; text-decoration: none;">
+        Back to Login Page &rarr;
       </a>
     </div>
 
@@ -30,5 +30,17 @@
       <p>&copy; 2026 Pruthviraj &bull; BSc Computer Science &bull; Kristu Jayanti</p>
     </footer>
   </div>
+
+  <script>
+    async function handleBackToLogin(e) {
+      if (e) e.preventDefault();
+      try {
+        await fetch('/api/auth', { method: 'DELETE' });
+      } catch (err) {}
+      localStorage.removeItem('applicant_id');
+      localStorage.removeItem('applicant_status');
+      window.location.href = '/index.html?reset=true';
+    }
+  </script>
 </body>
 </html>

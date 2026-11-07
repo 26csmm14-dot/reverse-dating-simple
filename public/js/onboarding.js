@@ -12,8 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSkipExpectations = document.getElementById('btnSkipExpectations');
   const contactHint = document.getElementById('contactHint');
 
-  // 1. Check existing session on load
+  // 1. Check existing session on load (unless user explicitly requested to reset / back to login)
   async function checkSession() {
+    const isReset = new URLSearchParams(window.location.search).has('reset');
+    if (isReset) {
+      try {
+        await fetch('/api/auth', { method: 'DELETE' });
+      } catch (e) {}
+      localStorage.removeItem('applicant_id');
+      localStorage.removeItem('applicant_status');
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      return;
+    }
+
     try {
       const storedId = localStorage.getItem('applicant_id');
       const query = storedId ? `?applicant_id=${encodeURIComponent(storedId)}` : '';
