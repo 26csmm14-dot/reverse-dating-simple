@@ -274,7 +274,9 @@ const server = http.createServer(async (req, res) => {
 
       res.writeHead(200, {
         'Content-Type': contentType,
-        'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600',
+        'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
       });
       const stream = fs.createReadStream(filePath);
       return stream.pipe(res);
@@ -286,10 +288,10 @@ const server = http.createServer(async (req, res) => {
       <!DOCTYPE html>
       <html>
         <head><title>404 Not Found</title></head>
-        <body style="background:#0a0a0f; color:#f4f4f6; font-family:sans-serif; text-align:center; padding:50px;">
-          <h1>404 - Not Found</h1>
+        <body style="background:#ffdbe6; color:#1f2937; font-family:sans-serif; text-align:center; padding:50px;">
+          <h1 style="color:#db2777;">404 - Not Found</h1>
           <p>The requested file <code>${pathname}</code> was not found.</p>
-          <a href="/" style="color:#ff7a00;">Return to Home</a>
+          <a href="/" style="color:#db2777; font-weight:bold;">Return to Home</a>
         </body>
       </html>
     `);

@@ -5,11 +5,11 @@
 
 :root {
   /* White & Distinct Light Baby Pink Palette */
-  --bg-color: #ffdbe6;
-  --bg-gradient: linear-gradient(180deg, #ffebf2 0%, #ffd6e2 100%);
+  --bg-color: #ffd0dc;
+  --bg-gradient: linear-gradient(180deg, #ffe8f0 0%, #ffccd8 100%);
   --card-bg: #ffffff;
   --card-hover: #ffffff;
-  --border-color: #f7cad7;
+  --border-color: #f7bccc;
   --border-focus: #f472b6;
   
   --text-main: #1f2937;
@@ -19,12 +19,12 @@
   --accent: #f472b6;
   --accent-hover: #ec4899;
   --accent-light: #fff0f5;
-  --accent-pill: #ffe4ee;
+  --accent-pill: #ffe0ea;
   --accent-text: #db2777;
   --accent-glow: rgba(244, 114, 182, 0.25);
   
   --input-bg: #ffffff;
-  --input-border: #f3cbd6;
+  --input-border: #f2c0ce;
   
   --success: #059669;
   --danger: #dc2626;
